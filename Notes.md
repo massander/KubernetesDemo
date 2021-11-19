@@ -1,8 +1,15 @@
 # Notes
 
+## Зависимости
+
+- QEMU/KVM
+- Paker
+  
 ## Собрка образа
 
 ОС - Ubuntu 20.04 lts
+
+OS Builder - HashiCorp Paker
 
 1. Установить Docker
 2. Установить Kubernetes
@@ -15,9 +22,9 @@
 
 | VM name  | Role              | IP adress | CPU | RAM  | Disk |
 |----------|-------------------|-----------|-----|------|------|
-| kube-1-m | Kubernetes master | -         | 1   | 1024 | 10G  |
-| kube-2-w | Kubernetes worker | -         | 1   | 1024 | 10G  |
-| kube-3-w | Kubernetes worker | -         | 1   | 1024 | 10G  |
+| kube-1-m | Kubernetes master | -         | 2   | 2048 | 10G  |
+| kube-2-w | Kubernetes worker | -         | 2   | 2048 | 10G  |
+| kube-3-w | Kubernetes worker | -         | 2   | 2048 | 10G  |
 
 1. Прописать каждой vm свой статический адрес
 2. Настроить SSH для каждой vm
@@ -39,5 +46,9 @@
 ## Скрипты для автоматизации
 
 1. Установка vm
+
+    Cсылки:
+    - <https://devopscube.com/packer-tutorial-for-beginners/>
+
 2. Запуск нескольких vm
 3. Сборка образа
