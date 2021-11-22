@@ -15,20 +15,30 @@ cli
 - virsh
 - virt-install
 
-Arch
-
 ## installation
 
-- sudo pacman -S qemu qemu-arch-extra ovmf bridge-utils dnsmasq vde2 \
- openbsd-netcat ebtables iptables
+### Arch
 
+```shell
+sudo pacman -S qemu \
+    qemu-arch-extra \
+    ovmf bridge-utils \
+    dnsmasq vde2 \
+    openbsd-netcat \
+    ebtables iptables
 ```
-    --ovmf helps to do the UEFI Bios and Secure Boot setups.
-    --bridge-utils for network bridge needed for VMs
-    --vde2 for QEMU distributed ethernet emulation
-    --dnsmasq the DNS forwarder and DHCP server
-    --openbsd-netcat network testing tool (Optional)
-    --ebtables and iptables to create packet routing and firewalls
+
+- `ovmf` helps to do the UEFI Bios and Secure Boot setups.
+- `bridge-utils` for network bridge needed for VMs
+- `vde2` for QEMU distributed ethernet emulation
+- `dnsmasq` the DNS forwarder and DHCP server
+- `openbsd-netcat` network testing tool (Optional)
+- `ebtables` and `iptables` to create packet routing and firewalls
+
+### Fedora
+
+```shell
+sudo dnf install qemu-kvm
 ```
 
 ## Собрка образа
