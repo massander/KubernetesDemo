@@ -29,6 +29,3 @@ sudo apt-get install \
     docker-ce \
     docker-ce-cli \
     # containerd.io
-    
-# Add ssh user to docker group
-usermod -aG docker ${SSH_USERNAME}
