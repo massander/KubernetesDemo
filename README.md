@@ -17,6 +17,7 @@ Packages:
 - `qemu-kvm` – Machine emulator and virtualizer
 - `libvirt` – Includes the libvirtd server exporting the virtualization support
 - `vagrant` - Utility for building and maintaining portable virtual software development environments
+- `ansible` - Provisioning, configuration management, and application-deployment tool enabling infrastructure as code
 - `packer` - Tool for creating identical machine images for multiple platforms from a single source configuration
 
 Optional:
@@ -33,13 +34,13 @@ Optional:
 <https://github.com/vagrant-libvirt/vagrant-libvirt-qa/blob/main/scripts/install.bash>
 
 ```shell
-    ./vagrant-install.sh
+./vagrant-install.sh
 ```
 
 ### Установка Packer
 
 ```shell
-    ./install-packer.sh
+./install-packer.sh
 ```
 
 ### Установка QEMU
@@ -130,7 +131,7 @@ packer build
 ### Vagrant
 
 ```shell
-    vagrant up
+vagrant up
 ```
 
 ### Manual
