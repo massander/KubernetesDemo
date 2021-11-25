@@ -1,6 +1,10 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
+
+# Docs for vagrant-libvirt
+# https://github.com/vagrant-libvirt/vagrant-libvirt
 ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
+ENV["LC_ALL"] = "en_US.UTF-8"
 
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
@@ -8,15 +12,55 @@ ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
 # you're doing.
 
 Vagrant.configure("2") do |config|
-  # The most common configuration options are documented and commented below.
-  # For a complete reference, please see the online documentation at
-  # https://docs.vagrantup.com.
-
-  # Every Vagrant development environment requires a box. You can search for
-  # boxes at https://vagrantcloud.com/search.
-  # config.vm.box = "base"
   config.vm.box = "generic/ubuntu2004"
+  # config.vm.box_version = "1.0.282"
+  # config.vm.box_url = "https://vagrantcloud.com/hashicorp/bionic64
 
+  # Kube master node
+  config.vm.define "kube-1-master" do |master|
+    master.vm.network "private_network", ip: "192.168.50.10"
+    master.vm.hostname = "kube-1-master"
+    
+    # master.vm.provision "ansible" do |ansible|
+    #     ansible.playbook = "kubernetes-setup/master-playbook.yml"
+    #     ansible.extra_vars = {
+    #         node_ip: "192.168.50.10",
+    #     }
+    # end
+  end
+
+  # (Kube worker nodes (Multi-machine environment)
+  (1..2).each do |i|
+    config.vm.define "kube-#{i+1}-worker" do |worker|
+      worker.vm.network "private_network", ip: "192.168.50.#{i+1+10}"
+      worker.vm.hostname = "kube-#{i+1}-worker"
+      
+      worker.vm.provider "libvirt" do |libvirt|
+        libvirt.memory = "1024"
+        # Number of virtual cpus
+        libvirt.cpus = 4
+        # Physical cpus to which the vcpus can be pinned
+        # libvirt.cpuset = '1-4,^3,6'
+      end
+      
+      # Install Ansible first
+      worker.vm.provision "shell",
+        inline: "echo hello from kube-#{i+1}-worker"
+      end
+      
+      # # Apply Ansible
+      # worker.vm.provision "ansible" do |ansible|
+      #   ansible.playbook = "kubernetes-setup/master-playbook.yml"
+      #   ansible.extra_vars = {
+      #       node_ip: "192.168.50.10",
+      #   }
+      # end
+  end
+
+  # Define primary vm
+  # config.vm.define "web", primary: true do |web|
+  # # ...
+  # end
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -71,4 +115,5 @@ Vagrant.configure("2") do |config|
   #   apt-get update
   #   apt-get install -y apache2
   # SHELL
+  # config.vm.provision :shell, path: "bootstrap.sh"
 end
