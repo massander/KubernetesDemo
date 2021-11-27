@@ -20,42 +20,50 @@ Vagrant.configure("2") do |config|
   config.vm.define "kube-1-master" do |master|
     master.vm.network "private_network", ip: "192.168.50.10"
     master.vm.hostname = "kube-1-master"
+    master.vm.provision "ansible" do |ansible|
+      ansible.playbook = "provisioners/ansible/playbook-master.yaml"
+      ansible.extra_vars = {
+          node_ip: "192.168.50.10",
+      }
+    end
+    master.vm.provider "libvirt" do |libvirt|
+      libvirt.memory = "2048"
+      # Number of virtual cpus
+      libvirt.cpus = 4
+      # Physical cpus to which the vcpus can be pinned
+      # libvirt.cpuset = '1-4,^3,6'
+    end
     
-    # master.vm.provision "ansible" do |ansible|
-    #     ansible.playbook = "kubernetes-setup/master-playbook.yml"
-    #     ansible.extra_vars = {
-    #         node_ip: "192.168.50.10",
-    #     }
-    # end
+     
   end
 
   # (Kube worker nodes (Multi-machine environment)
-  (1..2).each do |i|
-    config.vm.define "kube-#{i+1}-worker" do |worker|
-      worker.vm.network "private_network", ip: "192.168.50.#{i+1+10}"
-      worker.vm.hostname = "kube-#{i+1}-worker"
-      
-      worker.vm.provider "libvirt" do |libvirt|
-        libvirt.memory = "1024"
-        # Number of virtual cpus
-        libvirt.cpus = 4
-        # Physical cpus to which the vcpus can be pinned
-        # libvirt.cpuset = '1-4,^3,6'
-      end
-      
-      # Install Ansible first
-      worker.vm.provision "shell",
-        inline: "echo hello from kube-#{i+1}-worker"
-      end
-      
-      # # Apply Ansible
-      # worker.vm.provision "ansible" do |ansible|
-      #   ansible.playbook = "kubernetes-setup/master-playbook.yml"
-      #   ansible.extra_vars = {
-      #       node_ip: "192.168.50.10",
-      #   }
-      # end
-  end
+  #(1..2).each do |i|
+  #  config.vm.define "kube-#{i+1}-worker" do |worker|
+  #    worker.vm.network "private_network", ip: "192.168.50.#{i+1+10}"
+  #    worker.vm.hostname = "kube-#{i+1}-worker"
+  #    
+  #    worker.vm.provider "libvirt" do |libvirt|
+  #      libvirt.memory = "640"
+  #      # Number of virtual cpus
+  #      libvirt.cpus = 4
+  #      # Physical cpus to which the vcpus can be pinned
+  #      # libvirt.cpuset = '1-4,^3,6'
+  #    end
+  #    
+  #    # Install Ansible first
+  #    worker.vm.provision "shell",
+  #      inline: "echo hello from kube-#{i+1}-worker"
+  #    end
+  #    
+  #    # # Apply Ansible
+  #    # worker.vm.provision "ansible" do |ansible|
+  #    #   ansible.playbook = "provisioners/ansible/playbook-worker.yaml"
+  #    #   ansible.extra_vars = {
+  #    #       node_ip: "192.168.50.10",
+  #    #   }
+  #    # end
+  #end
 
   # Define primary vm
   # config.vm.define "web", primary: true do |web|
