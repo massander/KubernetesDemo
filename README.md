@@ -12,13 +12,13 @@ Run [Kubernetes](https://kubernetes.io/) cluster using [QEMU](https://www.qemu.o
 
 Linux host with root access.
 
-Packages:
+Installed following packages:
 
 - `qemu-kvm` – Machine emulator and virtualizer
 - `libvirt` – Includes the libvirtd server exporting the virtualization support
 - `vagrant` - Utility for building and maintaining portable virtual software development environments
+- `vagrant-libvirt` - Plugin for vagrant to communicate with libvirt
 - `ansible` - Provisioning, configuration management, and application-deployment tool enabling infrastructure as code
-- `packer` - Tool for creating identical machine images for multiple platforms from a single source configuration
 
 Optional:
 
@@ -26,99 +26,27 @@ Optional:
 - `virt-install` – Utility to install virtual machines
 - `virt-viewer` – Utility to display graphical console for a virtual machine
 - `virt-manager` - Graphical utility to manage KVM, Xen, or LXC via libvirt.
+- `packer` - Tool for creating identical machine images for multiple platforms from a single source configuration
   
 ## Installation
 
-### Установка Vagrant и плагина vagrant-libvirt
-
-<https://github.com/vagrant-libvirt/vagrant-libvirt-qa/blob/main/scripts/install.bash>
+### Arch
 
 ```shell
+sudo pacman -S qemu qemu-arch-extra vagrant libvirt ansible
+vagrant plugin install vagrant-libvirt
+```
+
+### Fedora
+
+<!-- <https://github.com/vagrant-libvirt/vagrant-libvirt-qa/blob/main/scripts/install.bash> -->
+
+```shell
+sudo dnf install qemu-kvm libvirt
+chmod +x ./vagrant-install.sh
 ./vagrant-install.sh
+vagrant plugin install vagrant-libvirt
 ```
-
-### Установка Packer
-
-```shell
-./install-packer.sh
-```
-
-### Установка QEMU
-
-#### Arch
-
-```shell
-sudo pacman -S qemu qemu-arch-extra
-```
-
-#### Fedora
-
-```shell
-sudo dnf install qemu-kvm
-```
-
-<!-- ```shell
-sudo pacman -S qemu \
-    qemu-arch-extra \
-    ovmf bridge-utils \
-    dnsmasq vde2 \
-    openbsd-netcat \
-    ebtables iptables
-```
-
-- `ovmf` helps to do the UEFI Bios and Secure Boot setups.
-- `bridge-utils` for network bridge needed for VMs
-- `vde2` for QEMU distributed ethernet emulation
-- `dnsmasq` the DNS forwarder and DHCP server
-- `openbsd-netcat` network testing tool (Optional)
-- `ebtables` and `iptables` to create packet routing and firewalls -->
-
-## Собрка образа
-
-### Using Packer
-
-```shell
-packer build
-```
-
-### Manual
-
-1. Установка ОC
-
-    Download image, for example Ubuntu 20.04 lts and run folowing command
-
-    ```shell
-    virt-install \
-        --name ubuntu1804 \
-        --ram 2048 \
-        --disk path=/var/lib/libvirt/images/u19.qcow2,size=8 \
-        --vcpus 2 \
-        --os-type linux \
-        --os-variant generic \
-        --console pty,target_type=serial \
-        --cdrom /var/lib/libvirt/isos/ubuntu-18.04.4-live-server-amd64.iso
-    ```
-    <!-- How to do same thing but with qemu or HashiCorp Paker -->
-
-2. Установка Docker
-  
-   ```shell
-   ./scripts/install-docker.sh
-   ```
-
-3. Установка Kubernetes
-  
-   ```shell
-   ./scripts/install-kubernetes.sh
-   ```
-
-4. Настройка групп
-
-   ```shell
-   ./scripts/add-user-to-groups.sh
-   ```
-
-5. Создание snapshot
 
 ## Создание виртуальных машин
 
@@ -136,7 +64,9 @@ vagrant up
 
 ### Manual
 
-1. Клонирование vm
+In Progress...
+
+<!-- 1. Клонирование vm
 
     ```shell
     virt-clone \
@@ -153,7 +83,7 @@ vagrant up
     ```
 
 3. Изменение ip адреса vm
-4. Настройка SSH
+4. Настройка SSH -->
   
 ## Настройка Kubernetes
 
@@ -196,20 +126,52 @@ TODO
     kubectl create deployment nginx --image=nginx
     ```
 
-   <!-- - Nginx
-   - Простой сервис на Go
-   - Minecraft server
-   - Prometheus/Grafana дял мониторинга -->
+## Собрка кастомного образа
 
-## Автоматизация
+### Using Packer
 
-1. Сборка образа
-2. Клонироваие vm
-3. Запуск нескольких vm одновременно
+```shell
+packer build
+```
 
-## Ресурсы
+### Manual
 
-- <https://devopscube.com/packer-tutorial-for-beginners/>
+In Progress...
+
+<!-- 1. Установка ОC
+
+    Download image, for example Ubuntu 20.04 lts and run folowing command
+
+    ```shell
+    virt-install \
+        --name ubuntu1804 \
+        --ram 2048 \
+        --disk path=/var/lib/libvirt/images/u19.qcow2,size=8 \
+        --vcpus 2 \
+        --os-type linux \
+        --os-variant generic \
+        --console pty,target_type=serial \
+        --cdrom /var/lib/libvirt/isos/ubuntu-18.04.4-live-server-amd64.iso
+    ```
+2. Установка Docker
+  
+   ```shell
+   ./scripts/install-docker.sh
+   ```
+
+3. Установка Kubernetes
+  
+   ```shell
+   ./scripts/install-kubernetes.sh
+   ```
+
+4. Настройка групп
+
+   ```shell
+   ./scripts/add-user-to-groups.sh
+   ```
+
+5. Создание snapshot -->
 
 ## Troublshooting
 
