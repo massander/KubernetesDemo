@@ -1,0 +1,9 @@
+---
+- hosts: all
+  # Run with super privileges
+  become: yes
+  roles:
+    - init
+    - docker
+    - kubernetes
+    # - ngrok

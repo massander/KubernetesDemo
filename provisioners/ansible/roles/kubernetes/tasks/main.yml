@@ -1,0 +1,6 @@
+---
+- name: Import swap.yml
+  import_tasks: swap.yml
+
+- name: Import install.yml
+  import_tasks: install.yml
