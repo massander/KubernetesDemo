@@ -1,0 +1,51 @@
+---
+- hosts: master
+  become: yes
+  tasks:
+    - name: Install packages that allow to disable selinux
+      apt:
+        name: selinux-utils
+
+    - name: Disable SElinux
+      command: setenforce 0
+
+    - name: Create network bridge
+      lineinfile:
+        path: /etc/sysctl.d/kube.conf
+        state: present
+        line: "{{ item }}"
+      with_items:
+        - net.bridge.bridge-nf-call-ip6tables = 1
+        - net.bridge.bridge-nf-call-iptables = 1
+
+    - name: Restart kubelet
+      service:
+        state: restarted
+        daemon_reload: yes
+        name: "{{ item }}"
+      with_items:
+        - docker
+        - kubelet
+
+    - name: Initialize Kubernetes cluster
+      shell: kubeadm init --pod-network-cidr=192.168.0.0/16 >> cluster_initialized.txt
+      args:
+        chdir: $HOME
+        creates: cluster_initialized.txt
+    
+    - name: Setup kubeconfig for vagrant user
+      command: "{{ item }}"
+      with_items:
+        - mkdir -p /home/vagrant/.kube
+        - cp -i /etc/kubernetes/admin.conf /home/vagrant/.kube/config
+        - chown vagrant:vagrant /home/vagrant/.kube/config
+        # - sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+
+    # - name: Install Pod network
+    #   become: yes
+    #   become_user: vagrant
+    #   shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/a70459be0084506e4ec919aa1c114638878db11b/Documentation/kube-flannel.yml >> pod_network_setup.txt
+    #   args:
+    #     chdir: $HOME
+    #     creates: pod_network_setup.txt
