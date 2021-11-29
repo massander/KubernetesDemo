@@ -1,0 +1,31 @@
+sudo swapoff -a
+sudo sed -i '/ swap / s/^/#/' /etc/fstab
+
+
+sudo apt-get install selinux-utils
+setenforce 0 
+
+
+/etc/sysctl.d/kube.conf
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+EOF
+
+
+/etc/docker/deamon.conf
+{
+    "exec-opts": ["native.cgroupdriver=systemd"]
+}
+
+
+sudo kubeadm config images pull
+
+
+sysctl --system
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+sudo systemctl restart kubelet
+
+sudo kubeadm init --pod-network-cidr=10.244.0.0/16
+...
+Your Kubernetes control-plane has initialized successfully!
