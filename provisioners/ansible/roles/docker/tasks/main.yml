@@ -26,3 +26,17 @@
   user:
     name: vagrant
     group: docker
+
+- name: Create docker daemon config
+  copy:
+    dest: "/etc/docker/daemon.json"
+    content: |
+      {
+        "exec-opts": ["native.cgroupdriver=systemd"]
+      }
+
+- name: Restart docker
+  ansible.builtin.systemd:
+    state: restarted
+    daemon_reload: yes
+    name: docker
