@@ -1,13 +1,43 @@
 ---
-- hosts: master
+- hosts: all
   become: yes
   tasks:
-    - name: Install packages that allow to disable selinux
-      apt:
-        name: selinux-utils
+    # - name: Install packages that allow to disable selinux
+    #   apt:
+    #     name: selinux-utils
 
-    - name: Disable SElinux
-      command: setenforce 0
+    # - name: Disable SElinux
+    #   command: setenforce 0
+    #   ignore_errors: true
+
+    # - name: Install the libselinux-python package
+    #   apt: 
+    #     name: python-selinux
+    #     state: present
+
+    # - name: Update repositories cache
+    #   apt:
+    #     update_cache: yes
+
+    # - name: Install the libselinux-python package
+    #   apt:
+    #     name: python3-selinux
+    #     state: present
+
+    # - name: Disable SELinux
+    #   selinux:
+    #     state: disabled
+
+    - name: Create directory for kube.conf
+      file:
+        path: /etc/sysctl.d
+        state: directory
+        # mode: '0755'
+    
+    - name: Create file kube.conf
+      file:
+        path: /etc/sysctl.d/kube.conf
+        state: touch
 
     - name: Create network bridge
       lineinfile:
@@ -20,10 +50,12 @@
 
     - name: Restart kubelet
       service:
-        state: restarted
-        daemon_reload: yes
+        # state: restarted
+        # daemon_reload: yes
         name: "{{ item }}"
-      with_items:
+        state: started
+        enabled: true
+      loop:
         - docker
         - kubelet
 
