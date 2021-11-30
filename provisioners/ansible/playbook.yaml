@@ -1,15 +1,20 @@
 ---
-- name: Common setup
-  hosts: workers,masters
+- hosts: kube_cluster
+  gather_facts: yes
   become: yes
   roles:
-    - init
-    - docker
-    - kubernetes
-    # - ngrok
+    - { role: common, tags: common }
+    - { role: docker, tags: docker }
+    - { role: kubernetes/common, tags: common }
 
-- name: Master Setup
+- hosts: master
+  gather_facts: yes
   become: yes
-  hosts: masters
-  tasks:
-    - import_tasks: master.yaml
+  roles:
+    - { role: kubernetes/master, tags: master }
+
+# - hosts: worker
+#   gather_facts: yes
+#   become: yes
+#   roles:
+#     - { role: kubernetes/worker, tags: worker }

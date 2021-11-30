@@ -1,47 +1,22 @@
 ---
-- name: Add an apt signing key for Docker
-  apt_key:
-    url: https://download.docker.com/linux/ubuntu/gpg
-    state: present
-
-- name: Add apt repository for stable version
-  apt_repository:
-    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
-    state: present
-
-- name: Install docker and its dependecies
-  apt: 
-    name: "{{ packages }}"
-    state: present
-    update_cache: yes
-  vars:
-    packages:
-      - docker-ce
-      - docker-ce-cli
-      - containerd.io
-  notify:
-   - docker status
+- name: Install Docker container engine
+  import_tasks: pkg.yaml
 
 - name: Add vagrant user to docker group
   user:
     name: vagrant
     group: docker
 
-- name: Create docker daemon config
+- name: Deploy Docker daemon.json
   copy:
+    src: files/daemon.json
     dest: "/etc/docker/daemon.json"
-    content: |
-      {
-        "exec-opts": ["native.cgroupdriver=systemd"]
-      }
+    # content: |
 
-- name: Restart docker
-  service:
+- name: Enable and check Docker service
+  systemd:
     name: docker
     daemon_reload: yes
-    state: restarted
-# - name: Restart docker
-#   ansible.builtin.systemd:
-#     state: restarted
-#     daemon_reload: yes
-#     name: docker
+    state: started
+    enabled: yes
+  register: started_docker

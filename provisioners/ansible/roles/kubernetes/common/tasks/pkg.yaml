@@ -1,17 +1,4 @@
 ---
-- name: Remove swapfile from /etc/fstab
-  mount:
-    name: "{{ item }}"
-    fstype: swap
-    state: absent
-  with_items:
-    - swap
-    - none
-
-- name: Disable swap
-  command: swapoff -a
-  when: ansible_swaptotal_mb > 0
-
 - name: Add an apt signing key for Kubernetes
   apt_key:
     url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
@@ -33,15 +20,3 @@
       - kubelet
       - kubeadm
       - kubectl
-
-- name: Restart kubelet
-  service:
-    name: kubelet
-    daemon_reload: yes
-    state: restarted
-
-# - name: Import swap.yml
-#   import_tasks: swap.yml
-
-# - name: Import install.yml
-#   import_tasks: install.yml

@@ -1,12 +1,11 @@
 ---
 - name: Install packages that allow apt to be used over HTTPS
+  become: true
+  become_user: root
   apt:
     name: "{{ packages }}"
     state: present
     update_cache: yes
-  # Dont know why delow does not work
-  # vars_files:
-  #   - ../vars/main.yaml
   vars:
     packages:
       - apt-transport-https
@@ -14,4 +13,3 @@
       - curl
       - gnupg-agent
       - software-properties-common
-      
