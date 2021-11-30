@@ -9,9 +9,11 @@ ENV["LC_ALL"] = "en_US.UTF-8"
 Vagrant.configure("2") do |config|
   config.vm.box = "generic/ubuntu2004"
 
-  config.vm.box_check_update = false
+  # config.vm.box_check_update = false
 
   config.vm.provision "ansible" do |ansible|
+    ansible.inventory_path = "provisioners/ansible/hosts.ini"
+    ansible.limit = "all"
     ansible.playbook = "provisioners/ansible/playbook.yaml"
   end
 
@@ -23,7 +25,7 @@ Vagrant.configure("2") do |config|
     master.vm.provider "libvirt" do |libvirt|
       libvirt.memory = "2048"
       # Number of virtual cpus
-      libvirt.cpus = 4
+      libvirt.cpus = 2
       # Physical cpus to which the vcpus can be pinned
       # libvirt.cpuset = '1-4,^3,6'
     end
@@ -36,9 +38,9 @@ Vagrant.configure("2") do |config|
      worker.vm.hostname = "kube-#{i+1}-worker"
      
      worker.vm.provider "libvirt" do |libvirt|
-       libvirt.memory = "640"
+       libvirt.memory = "1024"
        # Number of virtual cpus
-       libvirt.cpus = 4
+       libvirt.cpus = 2
        # Physical cpus to which the vcpus can be pinned
        # libvirt.cpuset = '1-4,^3,6'
      end
