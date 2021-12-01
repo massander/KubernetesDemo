@@ -1,0 +1,22 @@
+#! /bin/bash -eux
+
+# Set a default HOME_DIR environment variable if not set
+HOME_DIR="${HOME_DIR:-/home/vagrant}";
+
+# Make sure the home directory of the user is owned by the user
+chown -R vagrant:vagrant /home/vagrant
+
+pubkey_url="https://raw.githubusercontent.com/hashicorp/vagrant/master/keys/vagrant.pub";
+mkdir -p $HOME_DIR/.ssh;
+
+if command -v wget >/dev/null 2>&1; then
+    wget --no-check-certificate "$pubkey_url" -O $HOME_DIR/.ssh/authorized_keys;
+elif command -v curl >/dev/null 2>&1; then
+    curl --insecure --location "$pubkey_url" > $HOME_DIR/.ssh/authorized_keys;
+else
+    echo "Cannot download vagrant public key";
+    exit 1;
+fi
+
+chown -R vagrant $HOME_DIR/.ssh;
+chmod -R go-rwsx $HOME_DIR/.ssh;
