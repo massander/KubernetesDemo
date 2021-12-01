@@ -3,9 +3,9 @@
   gather_facts: yes
   become: yes
   roles:
-    - { role: common, tags: common }
-    - { role: docker, tags: docker }
-    - { role: kubernetes/common, tags: common }
+    - { role: common }
+    - { role: docker }
+    - { role: kubernetes/common }
 
 - hosts: master
   gather_facts: yes
