@@ -44,4 +44,4 @@ sudo systemctl restart docker
 sudo systemctl enable docker
 
 # Add ssh user to docker group
-usermod -aG docker vagrant
+sudo usermod -aG docker vagrant
