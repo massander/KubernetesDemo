@@ -10,9 +10,9 @@ Vagrant.configure("2") do |config|
 
   # Define three VMs with static private IP addresses.
   vms = [
-    { :name => "kube-1-master", :ip => "192.168.100.11", mem => "2048" },
-    { :name => "kube-2-worker", :ip => "192.168.100.12", mem => "2048" }
-    # { :name => "kube-3-worker", :ip => "192.168.100.13", mem => "2048" }
+    { :name => "kube-1-master", :ip => "192.168.100.11", :mem => "2048" },
+    { :name => "kube-2-worker", :ip => "192.168.100.12", :mem => "2048" }
+    # { :name => "kube-3-worker", :ip => "192.168.100.13", :mem => "2048" }
   ]
 
   # Configure VMs
@@ -22,7 +22,7 @@ Vagrant.configure("2") do |config|
       xvm.vm.network :private_network, ip: opts[:ip]
 
       xvm.vm.provider "libvirt" do |libvirt|
-        libvirt.provider = "qemu"
+        libvirt.driver = "qemu"
         libvirt.memory = opts[:mem]
         # Number of virtual cpus
         libvirt.cpus = 2
