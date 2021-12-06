@@ -1,39 +1,31 @@
-# Custom Vagrant box
+# How to create Vagrant box from existing box
 
-Download from release page pre built vagran
-box and add box to vagrant
+Go to `build` directory and launch VM
 
-```shell
-vagrant box add --name ubuntu-kube path/to/ubuntu-kube.box
-```
+    cd build
+    vagrant up
 
-Build from scratch
+Connect to VM
 
-```shell
-cd build
-vagrant up
-vagrant ssh
-```
+    vagrant ssh
 
-Now you can modify what you need
-For example, clone this repo and run scripts to install docker
-and kubernetes.
+Install packages or run commands
+For example:
 
-```shell
-git clone github.com/2thousandmax/k8s-qemu.git
-cd k8s-qemu/scripts
-chmod +x docker.sh kubernetes.sh
-./docker.sh
-./kubernetes.sh
-```
+    git clone github.com/2thousandmax/k8s-qemu.git
+    cd k8s-qemu/scripts
+    chmod +x docker.sh kubernetes.sh && ./docker.sh && ./kubernetes.sh
 
-Than logout and build package vagrant box
+Close connection to VM
 
-```shell
-logout
-export VAGRANT_LIBVIRT_VIRT_SYSPREP_OPERATIONS="defaults,-ssh-userdir,-ssh-hostkeys,-lvm-uuids"
-export VAGRANT_LIBVIRT_VIRT_SYSPREP_OPERATIONS="defaults,-ssh-userdir,-ssh-hostkeys,-lvm-uuids"
+    logout
 
-vagrant package --output ubuntu-kube.box
-vagrant box add --name ubuntu-kube ubuntu-kube.box
-```
+Build Vagrant box using `vagrant package` command
+
+    export VAGRANT_LIBVIRT_VIRT_SYSPREP_OPERATIONS="defaults,-ssh-userdir,-ssh-hostkeys,-lvm-uuids"
+
+    vagrant package --output ubuntu-kube.box
+
+Add built box to Vagrant
+
+    vagrant box add --name ubuntu-kube ubuntu-kube.box
