@@ -1,0 +1,6 @@
+apiVersion: apps/v1
+kind: configMap
+metadata:
+  name: pgweb-configmap
+data:
+  database_url: postgres-db-service

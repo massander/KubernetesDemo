@@ -16,18 +16,26 @@ spec:
     spec:
       containers:
         - name: pgweb
-          image: sosedoff/pgweb:0.11.3
+          image: sosedoff/pgweb
           ports:
             - containerPort: 8081
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-configmap
+                  key: database_url
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: pgweb
+  name: pgweb-service
 spec:
   selector:
     app: pgweb
+  type: LoadBalancer
   ports:
     - name: http
       port: 8081
       targetPort: 8081
+      nodePort: 30081
