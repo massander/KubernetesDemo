@@ -1,5 +1,5 @@
-apiVersion: apps/v1
 kind: Deployment
+apiVersion: apps/v1
 metadata:
   name: pgweb
   labels:
@@ -19,15 +19,17 @@ spec:
           image: sosedoff/pgweb
           ports:
             - containerPort: 8081
-          env:
-            - name: DATABASE_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: pgweb-configmap
-                  key: database_url
+          # env:
+          #   - name: DATABASE_URL
+          #     valueFrom:
+          #       configMapKeyRef:
+          #         name: pgweb-configmap
+          #         key: database_url
+          
 ---
-apiVersion: v1
+
 kind: Service
+apiVersion: v1
 metadata:
   name: pgweb-service
 spec:
@@ -38,4 +40,4 @@ spec:
     - name: http
       port: 8081
       targetPort: 8081
-      nodePort: 30081
+      # nodePort: 30081
