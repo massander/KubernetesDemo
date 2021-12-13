@@ -12,7 +12,7 @@
 
 ### Fedora
 
-Install packages
+Установка пакетов
 
     sudo dnf install qemu-kvm libvirt
 
@@ -49,7 +49,7 @@ Install packages
 
 ## Настройка Kubernetes
 
-Первым делом надо мнициализировать кластера с помощью утилиты `kubeadm`
+Первым делом надо инициализировать кластер с помощью утилиты `kubeadm`
 
     sudo kubeadm init  --pod-network-cidr 192.168.100.11/16
 
@@ -61,7 +61,7 @@ Install packages
 
 Установить расширения для сети подов
 
-        kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+    kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 
 Тепрь можно присоеденить зависимые(worker) ноды
 
@@ -69,11 +69,12 @@ Install packages
 
     kubeadm token create --print-join-command
 
-Команда вернет новую команду, которую можно использовать для присоединения следующего вида:
+Команда вернет новую команду, которую можно использовать для присоединения, следующего вида:
 
     sudo kubeadm join <control-plane-host>:<control-plane-port> \
         --token <token> \
         --discovery-token-ca-cert-hash sha256:<hash>
+
 Например:
 
     kubeadm join 192.168.121.53:6443 \
@@ -82,22 +83,22 @@ Install packages
 
 Теперь можно приступить к запуску чего-то внутри кластера
 
-Склонировать этот репозиторий и применить конфигурационные(.yaml) файлы
+Склонировать этот репозиторий и применить конфигурационные(.yaml) файлы.
 
     git clone <ссылка на репозиторий>
     cd <название репозитория>
     kubectl apply -f kubernetes/kubernetes-dashbord/kdash-deployment.yaml
 
-Команда создаст дашборд для графического управления кластером
+Команда создаст дашборд для графического управления кластером.
 
 [Как открыть дашборд](https://github.com/kubernetes/dashboard/blob/master/docs/user/accessing-dashboard/README.md)
 
-Получить токен можно командой
+Получить токен можно командой:
 
     kubectl get secret $(kubectl get serviceaccount dashboard -o jsonpath="{.secrets[0].name}") \
             -o jsonpath="{.data.token}" | base64 --decode
 
-Развертывание приложений в кластере применяется утилитой `kubectl`
+Развертывание приложений в кластере применяется утилитой `kubectl`.
 
     cd kuberntes/postgres
     kubectl apply -f postgres-secret.yaml
