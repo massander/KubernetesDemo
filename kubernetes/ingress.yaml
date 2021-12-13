@@ -3,36 +3,64 @@ apiVersion: networking.k8s.io/v1
 metadata:
   name: cluster-ingress
   annotations:
+    kubernetes.io/ingress.class: "traefik"
     traefik.ingress.kubernetes.io/router.entrypoints: web
-    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
     # traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    # traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+    # traefik.frontend.rule.type: PathPrefixStrip
     # traefik.ingress.kubernetes.io/router.tls: "true"
-    # kubernetes.io/ingress.class: "traefik"
-    #traefik.ingress.kubernetes.io/redirect-entry-point: https
-    #traefik.ingress.kubernetes.io/redirect-permanent: "true"
+    # traefik.ingress.kubernetes.io/redirect-entry-point: https
+    # traefik.ingress.kubernetes.io/redirect-permanent: "true"
 spec:
   rules:
-    - host: cluster.demo
+    - host: nginx.demo.com
       http:
         paths:
-          - path: /traefik
+          - path: /
+            pathType: Exact
+            backend:
+              service:
+                name: nginx-deployment
+                port:
+                  number: 80
+    
+    - host: pgweb.demo.com
+      http:
+        paths:
+          - path: /
+            pathType: Exact
+            backend:
+              service:
+                name: pgweb-service
+                port:
+                  number: 5432
+
+    - host: kdash.demo.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: kubernetes-dashboard
+                port:
+                  number: 443
+
+    - host: traefik.demo.com
+      http:
+        paths:
+          - path: /
             pathType: Prefix
             backend:
               service:
                 name: traefik-dashboard
                 port:
-                  number: 8081
-          - path: /
+                  number: 8080
+          - path: /whoami
             pathType: Exact
             backend:
               service:
-                name: kdash
+                name: whoami
                 port:
-                  number: 8001
-          # - path: /foo
-          #   pathType: Exact
-          #   backend:
-          #     service:
-          #       name:  whoami
-          #       port:
-          #         number: 80
+                  number: 80
+
