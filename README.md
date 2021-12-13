@@ -12,4 +12,4 @@
 
     vagrant up
 
-### [Подробнее](Setup.md)
+### [Подробнее](info.md)
