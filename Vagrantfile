@@ -12,7 +12,7 @@ Vagrant.configure("2") do |config|
   vms = [
     { :name => "kube-1-master", :ip => "192.168.100.11", :mem => "2048", :host_port => 8081  },
     { :name => "kube-2-worker", :ip => "192.168.100.12", :mem => "2048", :host_port => 8082 }
-    # { :name => "kube-3-worker", :ip => "192.168.100.13", :mem => "2048", :host_port => 8082 }
+    # { :name => "kube-3-worker", :ip => "192.168.100.13", :mem => "2048", :host_port => 8083 }
   ]
 
   # Configure VMs
