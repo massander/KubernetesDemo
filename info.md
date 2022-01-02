@@ -59,6 +59,10 @@
     sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
     sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
+Или
+    mkdir -p $HOME/.kube
+    scp root@192.168.100.11:/etc/kubernetes/admin.conf $HOME/.kube/config
+
 Установить расширения для сети подов
 
     kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
@@ -81,6 +85,10 @@
         --token o3o95x.9v9y2iqpuonydoi6 \
         --discovery-token-ca-cert-hash sha256:9b6f9f38031c029a8df831c0f56ccb7ebb67449258bb7242839587fa7b5912a8
 
+Проверим что все работает как и должно
+
+    kubectl get nodes -o wide
+
 Теперь можно приступить к запуску чего-то внутри кластера
 
 Склонировать этот репозиторий и применить конфигурационные(.yaml) файлы.
@@ -95,8 +103,7 @@
 
 Получить токен можно командой:
 
-    kubectl get secret $(kubectl get serviceaccount dashboard -o jsonpath="{.secrets[0].name}") \
-            -o jsonpath="{.data.token}" | base64 --decode
+    kubectl get secret $(kubectl get serviceaccount dashboard -o jsonpath="{.secrets[0].name}") -o jsonpath="{.data.token}" | base64 --decode
 
 Развертывание приложений в кластере применяется утилитой `kubectl`.
 
@@ -105,5 +112,3 @@
     kubectl apply -f postgres-deployment.yaml
 
     kubectl describe deployment postgres-deployment
-
-Атфлогично для остальных файлов

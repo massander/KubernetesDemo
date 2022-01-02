@@ -36,14 +36,22 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: traefik-dashboard
+                name: hello-kubernetes
+                # name: traefik-dashboard
                 port:
-                  number: 8080
+                  number: 80
           - path: /whoami
             pathType: Prefix
             backend:
               service:
                 name: whoami
+                port:
+                  number: 80
+          - path: /hello
+            pathType: Prefix
+            backend:
+              service:
+                name: hello-kubernetes-hello-world
                 port:
                   number: 80
 
