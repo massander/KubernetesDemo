@@ -1,0 +1,42 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: hello-kube
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      name: hello-kube
+  template:
+    metadata:
+      labels:
+        name: hello-kube
+    spec:
+      containers:
+        - name: hello-kube
+          image: paulbouwer/hello-kubernetes:1.10
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          # Needed by appp
+          env:
+            - name: MESSAGE
+              value: "Hello from Kubernetes"
+            - name: KUBERNETES_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
+            - name: KUBERNETES_POD_NAME
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.name
+            - name: KUBERNETES_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: spec.nodeName
+            - name: CONTAINER_IMAGE
+              value: paulbouwer/hello-kubernetes:1.10

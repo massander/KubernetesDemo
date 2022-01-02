@@ -1,0 +1,66 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: traefik
+  labels:
+    app: traefik
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: traefik
+  template:
+    metadata:
+      labels:
+        app: traefik
+    spec:
+      serviceAccountName: traefik-ingress-controller
+      containers:
+        - name: traefik
+          image: traefik:v2.5
+          args:
+            - --entrypoints.web.address=:80
+            - --providers.kubernetesingress
+            - --api.dashboard=true
+            - --api.insecure=true
+          ports:
+            - name: web
+              containerPort: 80
+            - name: dashboard
+              containerPort: 8080
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: traefik
+
+spec:
+  selector:
+    app: traefik
+  type: NodePort
+  externalIPs: ["192.168.121.53"]
+  ports:
+    - name: web
+      protocol: TCP
+      port: 80
+      targetPort: 80
+      nodePort: 30033
+
+# ---
+
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: traefik-dashboard
+
+# spec:
+#   selector:
+#     app: traefik
+#   ports:
+#   - name: dashboard
+#     protocol: TCP
+#     port: 8080
+#     targetPort: 8080

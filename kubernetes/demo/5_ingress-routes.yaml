@@ -1,0 +1,36 @@
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: hello-ingress
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+spec:
+  rules:
+    - host: new.cluster.demo
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: hello-kube-new
+                port:
+                  number: 80
+    - host: old.cluster.demo
+      http:
+        paths:
+          - path: /v2
+            pathType: Prefix
+            backend:
+              service:
+                name: hello-kube-old-v2
+                port:
+                  number: 80
+          - path: /v1
+            pathType: Prefix
+            backend:
+              service:
+                name: hello-kube-old-v1
+                port:
+                  number: 80
